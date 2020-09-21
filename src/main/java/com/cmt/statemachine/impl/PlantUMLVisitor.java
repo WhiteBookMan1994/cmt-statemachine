@@ -32,6 +32,8 @@ public class PlantUMLVisitor implements Visitor {
     public void visitOnEntry(StateMachine<?, ?> visitable) {
         plantUMLStatements = new ArrayList<>();
         plantUMLStatements.add("@startuml");
+        // add "[*] -> initialState"
+        addInitStatement(visitable);
     }
 
     /**
@@ -42,23 +44,21 @@ public class PlantUMLVisitor implements Visitor {
      */
     @Override
     public void visitOnExit(StateMachine<?, ?> visitable) {
-        // add "[*] -> initialState"
-        addInitStatement(visitable);
         plantUMLStatements.add("@enduml");
         //生成 plantuml.txt 文件
-        plantUMLStatements.forEach(statement -> {
-            File file = new File("plantuml.txt");
-            FileOutputStream fos = null;
-            try {
-                fos = new FileOutputStream(file, true);
-                PrintStream out = new PrintStream(fos);
+        File file = new File("plantuml.txt");
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(file, false);
+            PrintStream out = new PrintStream(fos);
+            plantUMLStatements.forEach(statement -> {
                 String str = statement + "\r\n";
                 out.print(str);
-                out.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-        });
+            });
+            out.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -82,7 +82,7 @@ public class PlantUMLVisitor implements Visitor {
             sb.append(sourceState).append(" --> ").append(targetState).append(" : ").append(EventUtil.getEventDesc(transition.getEvent()));
             String conditionDesc = transition.getConditionDesc();
             if (conditionDesc != null) {
-                 sb.append(" && ").append(conditionDesc);
+                sb.append(" && ").append(conditionDesc);
             }
             plantUMLStatements.add(sb.toString());
         }
