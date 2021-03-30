@@ -97,7 +97,7 @@ public class StateDiagramTest {
     @Test
     public void testGenerateStateDiagram(){
         StateMachine stateMachine = buildStateMachine();
-        stateMachine.generateStateDiagram();
+        stateMachine.generateStateDiagram(900, -1);
 
     }
 

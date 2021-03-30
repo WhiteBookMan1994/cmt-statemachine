@@ -18,7 +18,7 @@ public interface StateMachine<S, E> extends Visitable {
      * @param request     the user defined request
      * @return the target state
      */
-    <C> S fireEvent(S sourceState, E event, C request);
+    <R> S fireEvent(S sourceState, E event, R request);
 
     /**
      * Send an event {@code E} to the state machine and return a result
@@ -67,6 +67,10 @@ public interface StateMachine<S, E> extends Visitable {
 
     /**
      * generate state diagram.
+     *
+     * @param width  the width of state diagram, must be positive
+     * @param height the height of state diagram.
+     *               If the height is not a positive number, the height is adaptive according to the width
      */
-    void generateStateDiagram();
+    void generateStateDiagram(int width, int height);
 }
